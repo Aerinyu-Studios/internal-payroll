@@ -14,7 +14,7 @@ export async function POST(req:NextRequest,{params}:{params:Promise<{id:string}>
   if(contentType.startsWith('multipart/form-data')){
    const raw=await readLimited(req,MAX_PROOF_BYTES+65536);
    let form:FormData;try{form=await new Response(raw,{headers:{'Content-Type':contentType}}).formData();}catch{throw new ApiError(400,'The upload could not be read. Select the file again.');}
-   const file=form.get('file');if(!file||typeof file==='string'||!file.size||file.size>MAX_PROOF_BYTES)throw new ApiError(400,'Choose a PDF, PNG or JPEG no larger than 5 MB.');
+   const file=form.get('file');if(!file||typeof file==='string'||!file.size||file.size>MAX_PROOF_BYTES)throw new ApiError(400,'Choose a PDF, PNG or JPEG no larger than 4 MB.');
    bytes=new Uint8Array(await file.arrayBuffer());
   }else bytes=await readLimited(req,MAX_PROOF_BYTES);
   if(!bytes.length)throw new ApiError(400,'The attachment is empty.');
@@ -32,5 +32,4 @@ export async function POST(req:NextRequest,{params}:{params:Promise<{id:string}>
  });
 }
 
-export async function GET(req:NextRequest,{params}:{params:Promise<{id:string}>}){return withAuth(req,async(db,_user,profile)=>{finance(profile);const id=z.string().uuid().parse((await params).id);const {data:p}=await db.from('payments').select('proof_path').eq('id',id).single();if(!p?.proof_path)throw new ApiError(404,'No proof is attached.');const {data,error}=await db.storage.from('payment-proofs').download(p.proof_path);if(error)throw new ApiError(502,'Proof could not be retrieved.');const ext=p.proof_path.split('.').pop();return new NextResponse(await data.arrayBuffer(),{headers:{'Content-Type':'application/octet-stream','Content-Disposition':`attachment; filename="payment-proof.${ext}"`,'X-Content-Type-Options':'nosniff'}});});}
-
+export async function GET(req:NextRequest,{params}:{params:Promise<{id:string}>}){return withAuth(req,async(db,_user,profile)=>{finance(profile);const id=z.string().uuid().parse((await params).id);const {data:p}=await db.from('payments').select('proof_path').eq('id',id).single();if(!p?.proof_path)throw new ApiError(404,'No proof is attached.');const ext=p.proof_path.split('.').pop();const {data,error}=await db.storage.from('payment-proofs').createSignedUrl(p.proof_path,60,{download:'payment-proof.'+ext});if(error||!data?.signedUrl)throw new ApiError(502,'Proof could not be retrieved.');return NextResponse.redirect(data.signedUrl,303);});}
