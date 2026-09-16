@@ -15,7 +15,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --test-isolation=none tests/database.test.mjs tests/money.test.mjs tests/auth-proof.test.mjs tests/people.test.mjs tests/workspace-directory.test.mjs",
+    "test": "node --test --test-isolation=none tests/database.test.mjs tests/money.test.mjs tests/auth-proof.test.mjs tests/finance-rollback.test.mjs",
     "test:pdf": "node tests/pdf-layout.mjs",
     "dev:next": "next dev --webpack",
     "build:next": "next build --webpack",

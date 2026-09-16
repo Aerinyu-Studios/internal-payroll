@@ -1,4 +1,4 @@
-export type Role='super_admin'|'finance'|'manager'|'viewer'|'employee';
+export type Role='super_admin'|'finance'|'manager'|'viewer';
 export type Person={id:string;personnel_code:string;legal_name:string;display_name:string;engagement:string;department_id:string;department:string;position:string;email:string;phone:string;start_date:string;status:string;currency:string;default_rate:string;payment_structure:string;notes:string;version:number};
 export type WorkItem={id?:string;title:string;description:string;project_id:string;project?:string;completed_on:string;calculation:string;quantity:string;rate:string;fixed_amount:string;amount?:string;notes:string};
 export type Adjustment={id?:string;kind:string;description:string;amount:string;notes:string};

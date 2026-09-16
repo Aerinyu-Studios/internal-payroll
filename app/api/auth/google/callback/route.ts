@@ -12,7 +12,7 @@ export async function GET(req:NextRequest){
   if(!isWorkspaceIdentity(data.user)||!hasOAuthAuthentication(data.session.access_token)){await db.auth.signOut({scope:'local'});return fail('domain');}
   const authorized=client(data.session.access_token);
   const {data:profile,error:profileError}=await authorized.from('profiles').select('id,active,role').eq('id',data.user.id).single();
-  if(profileError||!profile?.active){await db.auth.signOut({scope:'local'});return fail('access');}
-  const res=NextResponse.redirect(new URL(profile.role==='employee'?'/people':'/',req.url));sessionCookies(res,req,data.session);clearVerifier(res);res.headers.set('Cache-Control','no-store');return res;
+  if(profileError||!profile?.active||!['super_admin','finance','manager','viewer'].includes(profile.role)){await db.auth.signOut({scope:'local'});return fail('access');}
+  const res=NextResponse.redirect(new URL('/',req.url));sessionCookies(res,req,data.session);clearVerifier(res);res.headers.set('Cache-Control','no-store');return res;
  }catch{return fail('signin');}
 }

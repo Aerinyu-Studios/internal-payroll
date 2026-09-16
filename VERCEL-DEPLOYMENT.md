@@ -25,7 +25,7 @@ SUPABASE_URL
 SUPABASE_ANON_KEY
 ```
 
-Use your existing Supabase project's URL and publishable or anon key. Keep the names exactly as above, without a NEXT_PUBLIC_ prefix. Do not use a service-role key for SUPABASE_ANON_KEY. Optional employee onboarding has a separate server-only SUPABASE_SERVICE_ROLE_KEY variable described in PEOPLE-SETUP.md. Add the variables before deploying, or redeploy after changing them. Your personnel and payment records remain in the same Supabase project.
+Use your existing Supabase project's URL and publishable or anon key. Keep the names exactly as above, without a NEXT_PUBLIC_ prefix. Do not use a service-role key for SUPABASE_ANON_KEY. This finance-only application does not need Google service-account credentials or a Supabase service-role key. Add the variables before deploying, or redeploy after changing them. Your personnel and payment records remain in the same Supabase project.
 
 The existing employee-ID and Google-access migrations are still required if you have not applied them. They are included in `supabase/migrations`; do not rerun migrations already applied to your database.
 
@@ -92,6 +92,6 @@ New proof uploads are limited to 4 MB to fit beneath Vercel's 4.5 MB function re
 
 The local TypeScript and route tests pass. A native Next.js production build was attempted but stopped when this Windows execution environment denied a subprocess launch (`spawn EPERM`). The Vercel build and live Google sign-in have not been verified. No Vercel project or DNS records were created or changed from this task.
 
-## Employee hub update
+## Finance-only rollback
 
-Apply migrations 006 and 007 separately and deploy the updated source. The hub is at /people. See PEOPLE-SETUP.md for automatic employee IDs and the Google Workspace administrator connection.
+See FINANCE-ROLLBACK.md. Apply migration 008 to disable retired People RPCs if the People migrations were installed. Account provisioning is removed; only SUPABASE_URL and SUPABASE_ANON_KEY are needed by this application.
