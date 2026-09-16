@@ -1,0 +1,2 @@
+import {NextRequest,NextResponse} from 'next/server';import {z} from 'zod';import {withAuth,body,rpc,finance} from '@/lib/server';
+export async function POST(req:NextRequest){return withAuth(req,async(db,_u,p)=>{finance(p);const input=z.object({from:z.string().regex(/^\d{4}-\d{2}-01$/),to:z.string().regex(/^\d{4}-\d{2}-01$/)}).refine(v=>v.from<=v.to,'Invalid date range').parse(await body(req));return NextResponse.json(await rpc(db,'project_report',{input}));});}

@@ -1,0 +1,1 @@
+'use client';export default function ErrorPage({reset}:{reset:()=>void}){return <main className="page"><h1>Unable to load this page</h1><p className="muted">Please try again. Your saved records are preserved.</p><button className="primary" onClick={reset}>Try again</button></main>}

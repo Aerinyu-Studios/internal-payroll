@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {lineTotal,total,csvCell} from '../lib/money.ts';
+import {receiptText,amountInWords} from '../lib/receipt-text.ts';
+test('decimal multiplication uses half-up rounding without floating point',()=>{assert.equal(lineTotal({calculation:'hours',quantity:'3.3333',rate:'10.125',fixed_amount:'0'},'MYR'),'33.75');assert.equal(lineTotal({calculation:'quantity',quantity:'0.1',rate:'0.2',fixed_amount:'0'},'MYR'),'0.02');assert.equal(lineTotal({calculation:'fixed',quantity:'0',rate:'0',fixed_amount:'1.005'},'MYR'),'1.01');});
+test('deductions and signed corrections use exact decimal arithmetic',()=>{assert.equal(total([{calculation:'fixed',quantity:'0',rate:'0',fixed_amount:'100'}],[{kind:'deduction',amount:'0.10'},{kind:'correction',amount:'-0.20'}],'MYR'),'99.70');});
+test('zero-decimal currencies and large values are exact',()=>{assert.equal(lineTotal({calculation:'hours',quantity:'1.5',rate:'101',fixed_amount:'0'},'JPY'),'152');assert.equal(total([{calculation:'fixed',quantity:'0',rate:'0',fixed_amount:'999999999999.99'}],[],'MYR'),'999999999999.99');});
+test('CSV export escapes cells and spreadsheet formula injection',()=>{assert.equal(csvCell('=SUM(A1)'),`"'=SUM(A1)"`);assert.equal(csvCell('a,"b"'),'"a,""b"""');});
+test('receipts normalize em and en dashes, including entered reference text',()=>{assert.equal(receiptText('TEST—REFERENCE–001'),'TEST-REFERENCE-001');assert.equal(receiptText('Payment — August'),'Payment - August');});
+test('receipt amount-in-words is deterministic and uses exact integer arithmetic',()=>{assert.equal(amountInWords('1600.00','MYR'),'RINGGIT MALAYSIA: ONE THOUSAND SIX HUNDRED AND ZERO CENTS ONLY');assert.equal(amountInWords('2000.01','MYR'),'RINGGIT MALAYSIA: TWO THOUSAND AND ONE CENT ONLY');assert.equal(amountInWords('152','JPY'),'JPY: ONE HUNDRED FIFTY TWO ONLY');});
+

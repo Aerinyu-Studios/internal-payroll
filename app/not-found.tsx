@@ -1,0 +1,1 @@
+export default function NotFound(){return <main className="page"><h1>Page not found</h1><p className="muted">This page is not part of the Aerinyu workspace.</p><a href="/" className="secondary">Return to overview</a></main>}

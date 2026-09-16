@@ -1,0 +1,4 @@
+const labels:Record<string,string>={super_admin:'Administrator',finance:'Finance',manager:'Manager',viewer:'Read-only access',per_task:'Per task',fixed:'Fixed amount',project:'Per project',bank_transfer:'Bank transfer',submitted:'Ready for review',awaiting_payment:'Awaiting payment',receipt:'Payment receipt',statement:'Compensation statement',sign_in_required:'Sign-in required',setup_required:'Setup required'};
+export function label(value:string){return labels[value]||value.replaceAll('_',' ').replace(/^\w/,c=>c.toUpperCase());}
+export function dateLabel(value:string){if(!value)return '';const date=new Date(value.length===10?value+'T00:00:00Z':value);return Number.isNaN(date.getTime())?value:date.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'});}
+export function decimalLabel(value:string){return value.replace(/(\.\d*?[1-9])0+$|\.0+$/,'$1');}

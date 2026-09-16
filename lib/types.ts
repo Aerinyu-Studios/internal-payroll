@@ -1,0 +1,10 @@
+export type Role='super_admin'|'finance'|'manager'|'viewer';
+export type Person={id:string;personnel_code:string;legal_name:string;display_name:string;engagement:string;department_id:string;department:string;position:string;email:string;phone:string;start_date:string;status:string;currency:string;default_rate:string;payment_structure:string;notes:string;version:number};
+export type WorkItem={id?:string;title:string;description:string;project_id:string;project?:string;completed_on:string;calculation:string;quantity:string;rate:string;fixed_amount:string;amount?:string;notes:string};
+export type Adjustment={id?:string;kind:string;description:string;amount:string;notes:string};
+export type RecordRow={id:string;statement_number:string;personnel_id:string;period:string;status:string;currency:string;notes:string;version:number;total:string;paid:string;balance:string;work_subtotal:string;additional:string;reimbursements:string;deductions:string;snapshot:Person|null;approved_at:string|null;approved_by_name:string|null;created_at:string};
+export type Payment={id:string;record_id:string;receipt_number:string;payment_date:string;amount:string;method:string;reference:string;paying_account:string;notes:string;reversed_at:string|null;reversal_reason:string|null;remaining_balance:string;proof_path:string|null};
+export type Doc={id:string;record_id:string;payment_id:string|null;document_number:string;kind:string;version:number;created_at:string;state:string;storage_path:string;snapshot:Record<string,any>};
+export type Activity={id:string;actor_name:string;action:string;object_id:string;record_id:string|null;created_at:string;before_state:unknown;after_state:unknown};
+export type WorkspaceData={profile:{id:string;full_name:string;role:Role};personnel:Person[];departments:{id:string;name:string;code:string|null}[];projects:{id:string;name:string;status:string}[];records:RecordRow[];payments:Payment[];documents:Doc[];activity:Activity[];profiles:{id:string;full_name:string;role:Role;active:boolean}[]};
+export type RecordDetail={record:RecordRow;items:WorkItem[];adjustments:Adjustment[];payments:Payment[];documents:Doc[];activity:Activity[]};
